@@ -1,4 +1,4 @@
-def call() {
+def call(Map config) {
   pipeline {
     agent any
     stages {
@@ -7,7 +7,7 @@ def call() {
           stage('Test') {
             agent {
               docker {
-                image 'golang:1.14'
+                image config.goVer
                 label 'slave'
                 args '--user root'
               }
@@ -24,7 +24,7 @@ def call() {
           stage('linter') {
             agent {
               docker {
-                image 'golang:1.14'
+                image cofig.goVer
                 label 'slave'
                 args '--user root'
               }
