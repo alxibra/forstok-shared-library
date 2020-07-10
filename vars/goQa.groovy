@@ -24,7 +24,7 @@ def call(Map config) {
           stage('linter') {
             agent {
               docker {
-                image cofig.goVer
+                image config.goVer
                 label 'slave'
                 args '--user root'
               }
