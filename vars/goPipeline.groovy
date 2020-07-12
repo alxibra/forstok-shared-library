@@ -75,6 +75,7 @@ def call(Map config) {
           }
           failure {
             slackSend message: "${env.JOB_NAME} fails, info: ${env.BUILD_URL}",
+                      color: 'danger'
           }
         }
       }
