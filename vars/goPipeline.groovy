@@ -69,10 +69,6 @@ def call(Map config) {
             sh 'bin/production'
         }
         post {
-          success {
-            slackSend message: "${env.JOB_NAME} is success, info: ${env.BUILD_URL}",
-                      color: 'good'
-          }
           failure {
             slackSend message: "${env.JOB_NAME} fails, info: ${env.BUILD_URL}",
                       color: 'danger'
