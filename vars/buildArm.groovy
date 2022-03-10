@@ -1,13 +1,15 @@
 def call() {
-  stage('arm') {
-    agent { label 'arm' }
+  node {
+    stage('arm') {
+      agent { label 'arm' }
 
-    when {
-      branch 'master'
-    }
+      when {
+        branch 'master'
+      }
 
-    steps {
-      sh 'forstok build --arch arm'
+      steps {
+        sh 'forstok build --arch arm'
+      }
     }
   }
 }
