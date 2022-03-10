@@ -1,7 +1,6 @@
 def call() {
-  node {
+  node ('arm') {
     stage('arm') {
-      agent { label 'arm' }
 
       when {
         branch 'master'
