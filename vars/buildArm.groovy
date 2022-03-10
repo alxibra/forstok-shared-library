@@ -1,12 +1,7 @@
 def call() {
   node ('arm') {
     stage('arm') {
-
-      when {
-        branch 'master'
-      }
-
-      steps {
+      if(env.BRANCH_NAME == 'master') {
         sh 'forstok build --arch arm'
       }
     }
