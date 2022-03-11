@@ -1,10 +1,7 @@
 def call {
-  stage('x86') {
-    agent { label 'slave' }
-    when {
-      branch 'master'
-    }
-    steps {
+  node('slave') {
+    checkout scm
+    if(env.BRANCH_NAME == 'master') {
       sh 'forstok build --arch x86'
     }
   }
