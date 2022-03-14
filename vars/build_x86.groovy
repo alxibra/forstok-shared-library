@@ -1,4 +1,4 @@
-def call {
+def call() {
   node('slave') {
     checkout scm
     if(env.BRANCH_NAME == 'master') {
