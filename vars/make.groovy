@@ -30,7 +30,7 @@ def call(String type) {
 				x86: {build_x86()}
 			]
 
-	    	archs = [:]
+			archs = [:]
 			arch.each { name, state ->
 				if (state) {
 					archs["${name}"] = action[name]
@@ -40,7 +40,7 @@ def call(String type) {
 				parallel archs
 			}
 			break
-		
+
 		case 'deploy':
 			echo 'make ' + type
 			action = [
