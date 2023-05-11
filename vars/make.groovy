@@ -1,39 +1,21 @@
 def call(String type) {
     def configs = readYaml file: 'config.yml'
     def services = configs.services
-    def arch = [x86: false, arm: false]
-    def cluster = [polling: false, development: false, api: false]
+    def arch = [:]
+    def cluster = [:]
 
     services.each { s ->
-        def serviceArch = s.getAt('arch')
-        if (serviceArch == 'arm' && !arch.arm) {
-            arch.arm = true
-        } else if (serviceArch == 'x86' && !arch.x86) {
-            arch.x86 = true
-        }
-
-        def serviceCluster = s.getAt('cluster')
-        if (serviceCluster == 'development' && !cluster.development) {
-            cluster.development = true
-        } else if (serviceCluster == 'polling' && !cluster.polling) {
-            cluster.polling = true
-        } else if (serviceCluster == 'api' && !cluster.api) {
-            cluster.api = true
-        }
+        arch["${s.getAt('arch')}"] = 1
+        cluster["${s.getAt('cluster')}"] = 1
     }
 
     switch(type) {
         case 'build':
             echo 'make ' + type
-            action = [
-                arm: {buildArm()},
-                x86: {build_x86()}
-            ]
-
             archs = [:]
-            arch.each { name, state ->
+            arch.each { name, _ ->
                 if (state) {
-                    archs["${name}"] = action[name]
+                    archs["${name}"] = {build("${name}")}
                 }
             }
             return {
@@ -43,16 +25,10 @@ def call(String type) {
 		
         case 'deploy':
             echo 'make ' + type
-            action = [
-                polling: {withCredentials([string(credentialsId: 'ENV_GPG_PASSPHRASE', variable: 'ENV_GPG_PASSPHRASE')]) {deployPolling()}},
-		development: {withCredentials([string(credentialsId: 'ENV_GPG_PASSPHRASE', variable: 'ENV_GPG_PASSPHRASE')]) {deployDevelopment()}},
-		api: {withCredentials([string(credentialsId: 'ENV_GPG_PASSPHRASE', variable: 'ENV_GPG_PASSPHRASE')]) {deployApi()}}
-            ]
-
             clusters = [:]
-            cluster.each { name, state ->
+            cluster.each { name, _ ->
                 if (state) {
-                    clusters["${name}"] = action[name]
+                    clusters["${name}"] = {withCredentials([string(credentialsId: 'ENV_GPG_PASSPHRASE', variable: 'ENV_GPG_PASSPHRASE')]) {deploy("${name}")}}
                 }
             }
             return {
