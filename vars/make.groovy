@@ -14,9 +14,7 @@ def call(String type) {
             echo 'make ' + type
             archs = [:]
             arch.each { name, _ ->
-                if (state) {
-                    archs["${name}"] = {build("${name}")}
-                }
+                archs["${name}"] = {build("${name}")}
             }
             return {
                 parallel archs
@@ -27,9 +25,7 @@ def call(String type) {
             echo 'make ' + type
             clusters = [:]
             cluster.each { name, _ ->
-                if (state) {
-                    clusters["${name}"] = {withCredentials([string(credentialsId: 'ENV_GPG_PASSPHRASE', variable: 'ENV_GPG_PASSPHRASE')]) {deploy("${name}")}}
-                }
+                clusters["${name}"] = {withCredentials([string(credentialsId: 'ENV_GPG_PASSPHRASE', variable: 'ENV_GPG_PASSPHRASE')]) {deploy("${name}")}}
             }
             return {
                 parallel clusters
